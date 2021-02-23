@@ -94,7 +94,7 @@ function Search() {
                         {title} by {authors}
                       </strong>
                     </a>
-                    <AddBtn onClick={() => addBook(title, authors,description,image,link)} />
+                    <FormBtn onClick={() => addBook(title, authors,description,image,link)}> Add </FormBtn>
                     </Row>
                   </ListItem>
                 )}
