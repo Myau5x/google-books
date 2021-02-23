@@ -73,7 +73,7 @@ function Saved() {
                       <h3>By {book.authors}</h3>
                       <p>{book.description}</p>
                     </Col>
-                    <a href={book.link}>
+                    <a href={book.link} target="_blank">
                       <strong>
                         {book.title} by {book.authors}
                       </strong>

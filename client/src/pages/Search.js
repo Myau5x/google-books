@@ -7,32 +7,14 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
+import { set } from "mongoose";
 
 function Search() {
   // Setting our component's initial state
   const [books, setBooks] = useState([])
   const [formObject, setFormObject] = useState({})
 
-  // Load all books and store them with setBooks
-  useEffect(() => {
-    loadBooks()
-  }, [])
-
-  // Loads all books and sets them to books
-  function loadBooks() {
-    API.getBooks()
-      .then(res => 
-        setBooks(res.data)
-      )
-      .catch(err => console.log(err));
-  };
-
-  // Deletes a book from the database with a given id, then reloads books from the db
-  function deleteBook(id) {
-    API.deleteBook(id)
-      .then(res => loadBooks())
-      .catch(err => console.log(err));
-  }
+  
 
   function addBook(title, authors, description, image, link){
     API.saveBook({
@@ -53,15 +35,11 @@ function Search() {
   // Then reload books from the database
   function handleFormSubmit(event) {
     event.preventDefault();
-    if (formObject.title && formObject.author) {
-      API.saveBook({
-        title: formObject.title,
-        author: formObject.author,
-        synopsis: formObject.synopsis
-      })
-        .then(res => loadBooks())
-        .catch(err => console.log(err));
-    }
+    let title = formObject.title;
+    API.googleBook(title)
+    .then(res => {setBooks(res.data.items)})
+    .catch(err => console.log(err))
+    
   };
 
     return (
@@ -95,16 +73,32 @@ function Search() {
             </Jumbotron>
             {books.length ? (
               <List>
-                {books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
+                {books.map(book => {
+                  let title = (book.volumeInfo.title === undefined) ? "" : book.volumeInfo.title;
+                  let authors = (book.volumeInfo.authors === undefined) ? [""] :book.volumeInfo.authors ;
+                  let description = (book.volumeInfo.description === undefined) ? "": book.volumeInfo.description;
+                  let image = (book.volumeInfo.imageLinks.thumbnail === undefined)? "": book.imageLinks.thumbnail;
+                  let link = (book.volumeInfo.previewLink ===undefined) ? "": book.volumeInfo.previewLink;
+
+                  return (
+                  <ListItem key={book.id}>
+                    <Row>
+                    <img src={image} alt={title}/>
+                    <Col size="md-10">
+                      <h2>{title}</h2>
+                      <h3>By {authors}</h3>
+                      <p>{description}</p>
+                    </Col>
+                    <a href={link} target="_blank">
                       <strong>
-                        {book.title} by {book.author}
+                        {title} by {authors}
                       </strong>
-                    </Link>
-                    <AddBtn onClick={() => addBook(book.title, book.authors,book.description,book.image,book.link)} />
+                    </a>
+                    <AddBtn onClick={() => addBook(title, authors,description,image,link)} />
+                    </Row>
                   </ListItem>
-                ))}
+                )}
+                )}
               </List>
             ) : (
               <h3>No Results to Display</h3>
