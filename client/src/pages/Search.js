@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DeleteBtn from "../components/DeleteBtn";
+import AddBtn from "../components/AddBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -33,6 +34,15 @@ function Search() {
       .catch(err => console.log(err));
   }
 
+  function addBook(title, authors, description, image, link){
+    API.saveBook({
+      title:title,
+      authors: authors,
+      description: description,
+      image: image,
+      link: link
+    })
+  }
   // Handles updating component state when the user types into the input field
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -57,10 +67,31 @@ function Search() {
     return (
       <Container fluid>
         <Row>
+          <Col size="md-8 sm12">
+          <Jumbotron>
+              <h1>What Books Should I Read?</h1>
+            </Jumbotron>
+            <form>
+              <Input
+                onChange={handleInputChange}
+                name="title"
+                placeholder="Title (required)"
+              />
+              
+              <FormBtn
+                disabled={!(formObject.title)}
+                onClick={handleFormSubmit}
+              >
+                Search Book
+              </FormBtn>
+            </form>
+          </Col>
+        </Row>
+        <Row>
           
-          <Col size="md-6 sm-12">
+          <Col size="md-8 sm-12">
             <Jumbotron>
-              <h1>Books On My List</h1>
+              <h1>Books found</h1>
             </Jumbotron>
             {books.length ? (
               <List>
@@ -71,7 +102,7 @@ function Search() {
                         {book.title} by {book.author}
                       </strong>
                     </Link>
-                    <DeleteBtn onClick={() => deleteBook(book._id)} />
+                    <AddBtn onClick={() => addBook(book.title, book.authors,book.description,book.image,book.link)} />
                   </ListItem>
                 ))}
               </List>

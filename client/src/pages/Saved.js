@@ -58,7 +58,7 @@ function Saved() {
       <Container fluid>
         <Row>
           
-          <Col size="md-6 sm-12">
+          <Col size="md-8 sm-12">
             <Jumbotron>
               <h1>Books On My List</h1>
             </Jumbotron>
@@ -66,12 +66,21 @@ function Saved() {
               <List>
                 {books.map(book => (
                   <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
+                    <Row>
+                    <img src={book.image} alt={book.title}/>
+                    <Col size="md-10">
+                      <h2>{book.title}</h2>
+                      <h3>By {book.authors}</h3>
+                      <p>{book.description}</p>
+                    </Col>
+                    <a href={book.link}>
                       <strong>
-                        {book.title} by {book.author}
+                        {book.title} by {book.authors}
                       </strong>
-                    </Link>
+                    </a>
+                    
                     <DeleteBtn onClick={() => deleteBook(book._id)} />
+                    </Row>
                   </ListItem>
                 ))}
               </List>
