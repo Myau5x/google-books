@@ -77,7 +77,7 @@ function Search() {
                   let title = (book.volumeInfo.title === undefined) ? "" : book.volumeInfo.title;
                   let authors = (book.volumeInfo.authors === undefined) ? [""] :book.volumeInfo.authors ;
                   let description = (book.volumeInfo.description === undefined) ? "": book.volumeInfo.description;
-                  let image = (book.volumeInfo.imageLinks.thumbnail === undefined)? "": book.imageLinks.thumbnail;
+                  let image = (book.volumeInfo.imageLinks === undefined)? "https://placehold.it/128x128": book.volumeInfo.imageLinks.thumbnail;
                   let link = (book.volumeInfo.previewLink ===undefined) ? "": book.volumeInfo.previewLink;
 
                   return (
